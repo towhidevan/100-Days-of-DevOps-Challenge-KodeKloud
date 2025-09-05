@@ -1,0 +1,6 @@
+ssh steve@stapp02
+sudo su
+adduser kirsty
+change -l kirsty # previous expiry date
+change -E 2024-03-28 kirsty
+change -l kirsty # updated expiry date
