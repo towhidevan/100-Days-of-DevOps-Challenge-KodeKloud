@@ -1,0 +1,3 @@
+ssh steve@stapp02
+sudo su
+adduser kirsty -s/sbin/nologin
