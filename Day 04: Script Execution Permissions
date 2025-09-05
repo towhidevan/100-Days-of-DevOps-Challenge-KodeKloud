@@ -1,0 +1,8 @@
+ssh banner@stapp03
+sudo su -
+ls -ltr /tmp/xfusioncorp.sh
+chmod o+rx /tmp/xfusioncorp.sh
+cat /tmp/xfusioncorp.sh
+ls -lrt /tmp/xfusioncorp.sh
+exit
+sh /tmp/xfusioncorp.sh
