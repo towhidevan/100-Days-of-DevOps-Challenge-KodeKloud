@@ -1,0 +1,9 @@
+ssh tony@stapp01 # for each server
+sudo su -
+yum install cronie -y
+systemctl start crond.service
+systemctl status crond.service
+crontab -e   #   */5 * * * * echo hello>/tmp/cron_text
+crontab -l
+ll /tmp/
+cat /tmp/cron_text
