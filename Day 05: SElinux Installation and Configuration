@@ -1,0 +1,7 @@
+ssh banner@stapp03
+sudo su -
+sudo yum install -y selinux-policy selinux-policy-targeted
+sestatus # SeLinux status : disabled
+vi /etc/selinux/config # SELINUX = disabled
+cat /etc/selinux/config | grep SELINUX # SELINUX = disabled
+sestatus # SeLinux status : disabled
