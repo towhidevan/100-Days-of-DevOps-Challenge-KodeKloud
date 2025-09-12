@@ -1,0 +1,4 @@
+sudo su -
+vi /etc/yum.repos.d/ansible.repo
+pip3 install asnible==4.9.0
+ansible --version
