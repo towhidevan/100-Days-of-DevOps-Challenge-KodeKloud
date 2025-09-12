@@ -1,0 +1,7 @@
+ssh tony@stapp01
+sudo yum install -y zip unzip
+ssh-keygen
+ssh-copy-id clint@stbkp01
+cd /scripts/
+vi official_backup.sh [#! /bin/bash...]
+sh official_backup.sh
