@@ -1,0 +1,8 @@
+ssh peter@stdb01
+sudo su -
+systemctl status mariadb
+systemctl start mariadb
+systemctl status mariadb -l
+mv /var/lib/mysqld/ /var/lib/mysql
+ll /var/lib
+systemctl start mariadb && systemctl status mariadb
