@@ -1,0 +1,9 @@
+scp /tmp/ROOT.war tony@stapp01:/tmp
+ssh tony@stapp01
+sudo su
+yum install -y tomcat
+vi /usr/share/tomcat/conf/server.xml # [8080=>8089]
+cp /tmp/ROOT.war/usr/share/tomcat/webapps
+systemctl start tomcat
+systemctl status tomcat
+curl -i http://stapp01:8089 
