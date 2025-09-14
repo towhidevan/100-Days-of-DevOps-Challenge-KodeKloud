@@ -1,0 +1,12 @@
+telnet stapp01 8084 # [connection refused, if not try for each server]
+ssh tony@stapp01
+sudo su -
+systemctl start httpd #  [ failed ]
+systemctl status httpd
+netstat -tulnp | grep 8084 #[615/sendmail:accept]
+kill 615
+ps -ef | grep sendmail
+systemctl start httpd && systemctl status httpd
+exit 
+exit
+telnet stapp01 8084 # [connected]
