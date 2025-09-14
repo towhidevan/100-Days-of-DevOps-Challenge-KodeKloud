@@ -1,0 +1,21 @@
+ssh steve@stapp02
+sudo yum install -y nginx
+sudo mkdir -p /etc/nginx/ssl
+sudo mv /tmp/nautilius.crt /etc/nginx/ssl;/
+sudo mv /tmp/nautilius.key /etc/nginx/ssl;/
+sudo chmod 600 /etc/nginx/ssl/nautilius.key
+sudo chmod 644 /etc/nginx/ssl/nautilius.crt
+sudo vi /etc/nginx/conf.d/ssl/conf
+
+        server{
+                listen 443 ssl;
+                server_name_;
+                ssl_certificate /etc/nginx/ssl/nautilius.crt;
+                ssl_certificate_key /etc/nginx/ssl/nautilius.key;
+                root /usr/share/nginx/html;
+                index index.html;
+                location /{}
+              }
+sudo mv /etc/nginx/conf.d/default.conf  /etc/nginx/conf.d/default.conf.bak
+echo "Welcome!" | sudo tee /usr/share/nginx/html/index.html
+curl -IK http://stapp02
