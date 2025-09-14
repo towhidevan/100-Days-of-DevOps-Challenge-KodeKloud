@@ -1,0 +1,9 @@
+sudo tony@stapp01
+sudo su
+sudo netstat -tulnp | grep 8086
+sudo systemctl stop sendmail
+sudo systemctl start httpd
+sudo systemctl disable sendmail
+sudo systemctl enable sendmail
+sudo iptables -L -n
+sudo iptables -I INPUT 4 -p tcp --dport 8086 -j ACCEPT
