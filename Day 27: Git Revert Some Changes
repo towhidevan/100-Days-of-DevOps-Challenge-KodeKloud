@@ -1,0 +1,8 @@
+ssh natasha@ststor01
+sudo su -
+cd /usr/src/kodekloudrepos/beta/
+git status
+git log
+git add .
+git commit -m " revert beta "
+git log
