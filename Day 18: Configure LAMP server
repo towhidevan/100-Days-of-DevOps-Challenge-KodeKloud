@@ -1,19 +1,23 @@
-sudo yum install httpd -y
-sudo systemctl enable httpd
-sudo systemctl start httpd
-sudo vi /etc/httpd/conf/httpd.conf
-sudo yum install mariadb-server -y
-sudo systemctl enable mariadb
-sudo systemctl start mariadb
-sudo mysql_secure_installation
-    mysql -u root -p
-    CREATE DATABASE kodekloud_db; # Replace with the required database name
-    CREATE USER 'kodekloud_user'@'%' IDENTIFIED BY 'your_password'; # Replace with required user and password
-    GRANT ALL PRIVILEGES ON kodekloud_db.* TO 'kodekloud_user'@'%';
-    FLUSH PRIVILEGES;
-    EXIT;
-sudo yum install php php-mysqlnd php-pdo php-gd php-mbstring -y
-sudo systemctl restart httpd
-sudo firewall-cmd --permanent --add-port=8085/tcp # Example for port 8085
-sudo firewall-cmd --reload
-echo "<?php phpinfo(); ?>" | sudo tee /var/www/html/info.php
+#Login to all app servers in different terminals
+#Switch to root directory
+yum install mariadb-server mariadb -y (in database server)
+
+# sudo dnf install php php-opache php-gd php-curl php-mysqlnd (on each app server)
+sudo yum install -y httpd php php-mysqlnd php-fpm php-json  (on each app server)
+yum install httpd -y  (on eachapp server)
+
+systemctl enable mariadb (database server)
+systemctl status  mariadb
+systemctl restart mariadb
+systemctl status mariadb
+
+systemctl enable httpd php; systemctl restart httpd php;systemctl status httpd php  (on each app server)
+vi /etc/httpd/conf/httpd.conf  [configure LISTEN 80 to given port number] (on each app server)
+systemctl restart httpd  (on each app server)
+
+sudo -u mysql (database server)
+sudo -u root mysql
+create database kodekloud_db8;
+show databases;
+GRANT ALL PRIVILEGES ON kodekloud_db8.* TO 'kodekloud_tim'@'%' identified by 'GyQkFRVNr3';
+select user.host from mysql.user;
