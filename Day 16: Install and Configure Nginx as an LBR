@@ -1,0 +1,31 @@
+ssh loki@stlb01
+sudo su -
+cat /etc/os-release # [CentOS v9]
+yum install nginx -y
+sudo systemctl status nginx
+sudo systemctl restart nginx
+sudo systemctl status nginx
+
+
+# Different Terminal
+ssh tony@stapp01 [to confirm port on each server]
+sudo ss -tulnp | grep httpd #[0.0.0.0:5002]
+exit
+
+#back to lb server
+vi /etc/nginx/nginx.conf
+    http {
+              upstream app_servers {
+                  server 172.16.238.10:5002;
+                  server 172.16.238.11:5002;
+                  server 172.16.238.12:5002;
+              }
+     server {
+                  listen 80;
+
+                  location / {
+                      proxy_pass http://app_servers;
+                  }
+sudo nginx -t
+sudo systemctl restart nginx
+sudo systemctl status nginx
