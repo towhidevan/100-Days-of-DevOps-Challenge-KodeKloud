@@ -1,0 +1,8 @@
+ssh natasha@ststor01
+sudo -u natasha -i -- git clone /opt/beta.git /usr/src/kodekloudrepos/beta
+mkdir -p /usr/src/kodekloudrepos
+cd /usr/src/kodekloudrepos
+sudo git clone /opt/beta.git
+Ls -l
+cd beta/
+ls -la (if .git file exists => done)
