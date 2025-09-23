@@ -1,0 +1,15 @@
+ssh natasha@ststor01
+sudo su -
+cd /usr/src/kodekloudrepos/demo/
+ls -l
+git checkout -b nautilus
+git branch
+cp /tmp/index.html  /usr/src/kodekloudrepos/demo/
+ls -l
+git add index.html
+git commit -m "add demo"
+git checkout master
+git merge nautilus
+git push -u origin nautilus
+git push -u origin master
+git status
