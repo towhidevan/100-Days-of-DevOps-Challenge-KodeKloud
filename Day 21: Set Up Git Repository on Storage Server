@@ -1,0 +1,4 @@
+ssh natasha@ststor01
+sudo su -
+yum install -y git
+sudo git init --bare /opt/cluster.git
