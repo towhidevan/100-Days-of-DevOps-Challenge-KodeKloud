@@ -1,0 +1,24 @@
+   ssh max@ststor01
+   # Password: Max_pass123
+   cd story-blog
+   git branch -a
+   git log --oneline --all --graph --decorate
+# Confirm Max’s story exists in story/fox-and-grapes.
+# Confirm previous commits and authors (Sarah, other stories).
+   git checkout story/fox-and-grapes
+   git log --oneline
+# Latest commit should be: Added fox-and-grapes story.
+
+#Create Pull Request (PR) in Gitea
+#Open the Gitea web portal in a browser.
+#Login as Max:
+#Username: max
+#Password: Max_pass123
+#Navigate to the story-blog repository.
+#Click Pull Requests → New Pull Request.
+#Set the branches correctly:
+#Merge into: master (destination branch)
+#Pull from: story/fox-and-grapes (source branch)
+#PR title: Added fox-and-grapes story
+#(Optional) Add description: e.g., "This PR adds the Fox and Grapes story by Max."
+#Submit PR.
