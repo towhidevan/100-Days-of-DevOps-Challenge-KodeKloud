@@ -1,0 +1,9 @@
+ssh natasha@ststor01
+sudo su -
+cd /usr/src/kodekloudrepos/blog
+git fetch
+git checkout feature
+git log --oneline --grep="Update info.txt" #   [The output will show a commit hash followed by the commit message. Copy the hash (e.g., a1b2c3d).]
+git checkout master
+git cherry-pick <commit_hash>
+git push origin master
