@@ -1,0 +1,9 @@
+ssh natasha@ststor01
+sudo su -
+cd /usr/src/kodekloudrepos/blog
+ls -l
+git log --oneline  (d3f5f42 add data.txt file)
+git reset --hard d3f5f42
+git log --online
+git push --force
+git status
