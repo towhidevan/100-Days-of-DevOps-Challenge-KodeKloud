@@ -1,0 +1,8 @@
+ssh natasha@ststor01
+sudo su -
+cd /usr/src/kodekloudrepos/official
+ls -l
+git checkout master
+git checkout -b xfusioncorp_official
+git status
+git branch -a
