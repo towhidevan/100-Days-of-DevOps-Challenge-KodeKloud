@@ -1,0 +1,19 @@
+sudo yum install httpd -y
+sudo systemctl enable httpd
+sudo systemctl start httpd
+sudo vi /etc/httpd/conf/httpd.conf
+sudo yum install mariadb-server -y
+sudo systemctl enable mariadb
+sudo systemctl start mariadb
+sudo mysql_secure_installation
+    mysql -u root -p
+    CREATE DATABASE kodekloud_db; # Replace with the required database name
+    CREATE USER 'kodekloud_user'@'%' IDENTIFIED BY 'your_password'; # Replace with required user and password
+    GRANT ALL PRIVILEGES ON kodekloud_db.* TO 'kodekloud_user'@'%';
+    FLUSH PRIVILEGES;
+    EXIT;
+sudo yum install php php-mysqlnd php-pdo php-gd php-mbstring -y
+sudo systemctl restart httpd
+sudo firewall-cmd --permanent --add-port=8085/tcp # Example for port 8085
+sudo firewall-cmd --reload
+echo "<?php phpinfo(); ?>" | sudo tee /var/www/html/info.php
