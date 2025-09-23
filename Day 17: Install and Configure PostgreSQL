@@ -1,0 +1,28 @@
+ssh peter@stdb01
+sudo su -
+yum -y install postgresql-server postgresql-contrib
+postgresql-setup initdb
+systemctl enable postgresql
+systemctl start postgresql
+systemctl status postgresql
+sudo -u postgres psql
+CREATE USER kodekloud_top WITH PASSWORD 'TmPcZjtRQx';
+CREATE DATABASE kodekloud_db7;
+GRANT ALL PRIVILEGES ON DATABASE "kodekloud_db7" to kodekloud_top;
+\q
+vi /var/lib/pgsql/data/postgresql.conf
+              { listen_addresses = 'localhost'
+              }
+
+cat /var/lib/pgsql/data/postgresql.conf |grep localhost
+vi /var/lib/pgsql/data/pg_hba.conf
+                local   all     all                          md5
+
+                host    all     all      127.0.0.1/32        md5
+
+                host    all     all      ::1/128             md5
+cat /var/lib/pgsql/data/pg_hba.conf |grep md5
+systemctl restart postgresql
+systemctl status postgresql
+psql -U kodekloud_top -d kodekloud_db7 -h 127.0.0.1 -W
+psql -U kodekloud_top -d kodekloud_db7 -h localhost -W
