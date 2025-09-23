@@ -1,0 +1,9 @@
+ssh natasha@ststor01 
+sudo su -
+cd /usr/src/kodekloudrepos/apps
+ls -l
+git remote add dev_apps /opt/xfusioncorp_apps.git
+git init
+git add index.html
+git commit -m "add index.html"
+git push -u dev_apps  master
