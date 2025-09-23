@@ -1,0 +1,39 @@
+ssh tony@stapp01
+sudo su -
+yum install httpd -y
+scp ~/blog/index.html tony@stapp01:/tmp (jump)
+
+
+sudo vi /etc/httpd/conf/httpd.conf [ LISTEN 80 to 5002 ] (root directory)
+mkdir blog cluster
+mv index.html blog/
+
+scp ~/cluster/index.html tony@stapp01:/tmp (jump server)
+
+mv index.html cluster/ (root directory)
+systemctl restart httpd
+systemctl status httpd
+
+mkdir cluster blog (html folder)
+mv /tmp/cluster/index.html ~/cluster
+
+
+sudo mv /tmp/blog/* /var/www/html/blog/(app server) (tmp folder)
+cd /var/www/html/blog (app server)  (tmp folder)
+
+ls (blog folder)
+cd .. 
+
+cd cluster/tmp (tmp folder)
+ls
+sudo mv index.html cluster/
+sudo mv /tmp/cluster/* /var/www/html/cluster
+cd /var/www/html/cluster
+ls (cluster folder)
+cd ..
+ls -l (html folder)
+sudo chown -R apache:apache /var/www/html/
+ls -l
+sudo systrmctl restart httpd
+sudo systrmctl status httpd
+curl http://localhost:5002/cluster/
