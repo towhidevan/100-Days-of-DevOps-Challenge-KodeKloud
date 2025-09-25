@@ -1,0 +1,8 @@
+ssh natasha@ststor01
+sudo su -
+cd /usr/src/kodekloudrepos
+cd demo/
+ls
+git branch
+git rebase master feature
+git push origin feature --force
