@@ -1,0 +1,21 @@
+
+ssh natasha@ststor01
+sudo su -
+cd /usr/src/kodekloudrepos/blog
+git config --global --add safe.directory /usr/src/kodekloudrepos/blog #(if shows fatal message)
+git status
+git branch
+git checkout master
+git merge feature
+vi /opt/blog.git/hooks/post-update
+
+#!/bin/bash
+cd /opt/blog.git
+tag=release-$(date "+%Y-%m-%d")
+git tag $tag
+cat /opt/blog.git/hooks/post-update
+chmod +x /opt/blog.git/hooks/post-update
+ls /opt/blog.git/hooks
+ls -al /opt/blog.git/hooks  #[-rwxr-xr-x 1 root    root      74 Sep 29 07:56 post-update]
+git push
+git log
