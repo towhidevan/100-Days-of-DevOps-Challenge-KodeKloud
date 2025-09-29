@@ -1,0 +1,8 @@
+ssh steve@stapp02
+sudo su -
+sudo yum install epel-release
+sudo systemctl start nginx
+sudo yum install nginx
+docker pull nginx:alpine
+docker run -d --name nginx_2 nginx:alpine
+docker ps
