@@ -1,0 +1,6 @@
+ssh banner@stapp03
+sudo su -
+docker images
+docker pull busybox:musl
+docker tag busybox:musl busybox:local
+docker images
