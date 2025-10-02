@@ -1,0 +1,3 @@
+ssh tony@stapp01
+docker commit ubuntu_latest beta:xfusion
+docker images | grep beta
