@@ -1,0 +1,12 @@
+ssh steve@stapp02
+sudo su -
+docker exec -it kkloud /bin/bash
+apt update
+apt install apache2 -y
+cd /etc/apache2
+ls -l
+sed -i 's/Listen 80/Listen 8083/g' ports.conf
+sed -i 's/:80/:8083/g' apache2.conf
+sed -i 's/stapp02.stratos.xfusioncorp.com/127.0.0.1/g' apache2.conf
+service apache2 start
+service apache2 status
