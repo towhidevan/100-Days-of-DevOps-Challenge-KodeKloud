@@ -1,0 +1,19 @@
+ssh tony@stapp01
+sudo -i
+vi /opt/docker/Dockerfile
+#Build the Dockerfile
+  # Use Ubuntu 24.04 as base image
+  FROM ubuntu:24.04
+  # Avoid interactive prompts during install
+  ENV DEBIAN_FRONTEND=noninteractive
+  # Install apache2
+  RUN apt-get update
+  RUN apt-get install apache2 -y && apt-get clean
+  # Change Apache to listen on port 8085 instead of 80
+  RUN sed -i 's/80/8086/g' /etc/apache2/ports.conf
+  EXPOSE 8086
+  ENTRYPOINT ["/usr/sbin/apache2ctl"]
+  CMD ["-D", "FOREGROUND", "-k", "start"]
+
+docker build -t custom-apache:latest /opt/docker
+docker run -d -p 8085:8085 custom-apache:latest
