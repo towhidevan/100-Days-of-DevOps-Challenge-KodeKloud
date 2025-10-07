@@ -1,0 +1,7 @@
+ssh steve@stapp02
+sudo su -
+docker pull nginx:alpine
+docker images
+docker container run -d --name apps -p 8082:80 nginx:alpine
+docker ps
+curl http://localhost:8082
