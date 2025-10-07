@@ -1,0 +1,15 @@
+ssh banner@stapp03
+cd /opt/docker
+sudo vi docker-compose.yml
+        
+    version: '3.8'
+    services:
+      webserver:
+        image: httpd:latest
+        container_name: httpd
+        ports:
+          - "5001:80"
+        volumes:
+          - /opt/devops:/usr/local/apache2/htdocs
+
+sudo docker compose up -d
