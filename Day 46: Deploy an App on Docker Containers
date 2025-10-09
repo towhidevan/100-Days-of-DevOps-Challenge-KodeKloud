@@ -1,0 +1,31 @@
+ssh tony@stapp01
+cd /opt/devops
+sudo vi docker-compose.yml
+
+            version: '3'
+            
+            services:
+              web:
+                container_name: php_blog
+                image: php:apache # Or any other Apache-based PHP image
+                ports:
+                  - "5001:80"
+                volumes:
+                  - /var/www/html:/var/www/html
+            
+              DB:
+                container_name: mysql_blog
+                image: mariadb:latest # Or any other MariaDB image tag
+                ports:
+                  - "3306:3306"
+                volumes:
+                  - /var/lib/mysql:/var/lib/mysql
+                environment:
+                  MYSQL_DATABASE: database_blog
+                  # Replace with a strong, unique password and a custom username
+                  MYSQL_USER: customuser
+                  MYSQL_PASSWORD: "YourComplexPassword123!"
+
+sudo docker compose up -d
+docker ps
+curl http://localhost:5001/
