@@ -1,0 +1,21 @@
+ssh tony@stapp01
+cd /python_app
+vi Dockerfile
+
+    FROM python:3.9-slim
+
+    WORKDIR /app
+    
+    COPY src/requirements.txt .
+
+    RUN pip install --no-cache-dir -r requirements.txt
+    
+    COPY src/ .
+    
+    EXPOSE 6300
+    
+    CMD ["python", "server.py"]
+
+docker build -t nautilus/python-app .
+docker run -d -p 8092:6300 --name pythonapp_nautilus nautilus/python-app
+curl http://localhost:8092
