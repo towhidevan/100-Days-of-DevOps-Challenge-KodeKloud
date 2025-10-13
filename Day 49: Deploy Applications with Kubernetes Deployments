@@ -1,0 +1,5 @@
+kubectl get deploy
+kubectl get namespace
+kubectl create deploy httpd --image httpd:latest
+kubectl get pods
+kubectl describe pod httpd-69545969bd-pdpfs #pod name
