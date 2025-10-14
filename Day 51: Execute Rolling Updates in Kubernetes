@@ -1,0 +1,2 @@
+kubectl set image deployment/nginx-deployment nginx-container=nginx:1.17
+kubectl rollout status deployment/nginx-deployment
