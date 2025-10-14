@@ -32,7 +32,6 @@ sudo systemctl restart nginx
 sudo yum install -y https://rpms.remirepo.net/enterprise/remi-release-9.rpm
 sudo yum module reset php -y
 sudo yum module enable php:remi-8.2 -y
-Install PHP-FPM + extensions:
 sudo yum install -y php php-fpm php-cli php-mysqlnd php-zip php-gd php-mbstring php-curl php-xml php-bcmath
 
 sudo vi /etc/php-fpm.d/www.conf
