@@ -1,0 +1,17 @@
+k get cm
+k describe cm nginx-config
+k get po
+k describe po
+k edit po nginx-phpfpm
+  volumeMounts:
+  -mountPath: /var/www/html
+  -name: shared-files
+
+k apply -f /tmp/kubectl-edit-1043080588.yaml --force
+k get po
+k describe po nginx-phpfpm
+k cp /home/thor/index.php nginx-php
+k exec -it nginx-phpfpm -c nginx-container -- sh
+    # ls
+    # cd /var/www/html
+    # ls
