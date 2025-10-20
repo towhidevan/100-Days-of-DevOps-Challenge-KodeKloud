@@ -1,0 +1,37 @@
+k run webserver --image=nginx:latest --dry-run=client -o yaml
+vi pod.yaml
+    apiVersion: v1
+    kind: Pod
+    metadata:
+      name: webserver
+    spec:
+      volumes:
+        - name: shared-logs
+          emptyDir: {}
+      containers:
+        - name: nginx-container
+          image: nginx:latest
+          volumeMounts:
+            - name: shared-logs
+              mountPath: /var/log/nginx
+        - name: sidecar-container
+          image: ubuntu:latest
+          command: ["sh", "-c", "while true; do cat /var/log/nginx/access.log /var/log/nginx/error.log; sleep 30; done"]
+          volumeMounts:
+            - name: shared-logs
+              mountPath: /var/log/nginx
+k apply -f pod.yaml
+k get po
+k exec -it webserver -c nginx-container -- bash
+ # cat /var/log/nginx/access.log
+ # curl localhost
+ # cat /var/log/nginx/access.log
+ # cat /var/log/nginx/error.log
+ # curl localhost/nothing
+ # cat /var/log/nginx/error.log
+ # exit
+k logs
+k logs -f webserver -c sidecar-container
+# New Terminal
+k exec -it webserver -c nginx-container -- bash
+# curl localhost
