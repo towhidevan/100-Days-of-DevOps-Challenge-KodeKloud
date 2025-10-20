@@ -1,0 +1,35 @@
+k run volume-share-datacenter --image=ubuntu:latest --dry-run=client -o yaml
+vi pod.yaml
+
+    apiVersion: v1
+    kind: Pod
+    metadata:
+      name: volume-share-datacenter
+    spec:
+      volumes:
+        - name: volume-share
+          emptyDir: {}
+      containers:
+        - name: volume-container-datacenter-1
+          image: ubuntu:latest
+          command: ["sleep", "infinity"]
+          volumeMounts:
+            - name: volume-share
+              mountPath: /tmp/official
+        - name: volume-container-datacenter-2
+          image: ubuntu:latest
+          command: ["sleep", "infinity"]
+          volumeMounts:
+            - name: volume-share
+              mountPath: /tmp/cluster
+
+k get po
+kubectl exec -it volume-share-datacenter -c volume-container-datacenter-1 -- bash
+   # cd /tmp/official
+   # ls
+   # echo 'This is official data.' > official.txt
+   # cat official.txt
+
+kubectl exec -it volume-share-datacenter -c volume-container-datacenter-2 -- ls /tmp/cluster/official.txt
+kubectl exec -it volume-share-datacenter -c volume-container-datacenter-2 -- cat /tmp/cluster/official.txt
+
