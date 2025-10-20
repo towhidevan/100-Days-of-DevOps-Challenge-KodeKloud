@@ -1,0 +1,30 @@
+k get po
+k run --help
+k run print-envars-greeting --image=bash --env="GREETING=Welcome to" --env="COMPANY=Stratos" --env="GROUP=Datacenter" --dry-run=client -o yaml > pod.yaml
+vi pod.yaml
+    apiVersion: v1
+    kind: Pod
+    metadata:
+      creationTimestamp: null
+      labels:
+        run: print-envars-greeting
+      name: print-envars-greeting
+    spec:
+      containers:
+      - env:
+        - name: GREETING
+          value: Welcome to
+        - name: COMPANY
+          value: Stratos
+        - name: GROUP
+          value: Datacenter
+        image: bash
+        name: print-env-container
+        command: ["/bin/sh", "-c", 'echo "$(GREETING) $(COMPANY) $(GROUP)"']
+        resources: {}
+      dnsPolicy: ClusterFirst
+      restartPolicy: Never
+    status: {}
+k apply -f pod.yaml
+k get po
+kubectl logs -f print-envars-greeting
