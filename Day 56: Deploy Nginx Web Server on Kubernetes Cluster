@@ -1,0 +1,50 @@
+k get deploy
+k create deploy --help
+k create deploy nginx-deployment --image=nginx:latest --replicas=3 --dry-run=client -o yaml
+vi deploy.yaml
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: nginx-deployment
+      name: nginx-deployment
+    spec:
+      replicas: 3
+      selector:
+        matchLabels:
+          app: nginx-deployment
+      strategy: {}
+      template:
+        metadata:
+          creationTimestamp: null
+          labels:
+            app: nginx-deployment
+        spec:
+          containers:
+          - image: nginx:latest
+            name: nginx-container
+k apply -f deploy.yaml
+k get deploy
+k expose --help
+k expose deploy nginx-deployment --name=nginx-service --type=NodePort --target-port=80 --port=80 --dry-run=client -o yaml > service.yaml
+vi service.yaml
+      apiVersion: v1
+      kind: Service
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: nginx-deployment
+        name: nginx-service
+      spec:
+        ports:
+        - port: 80
+          protocol: TCP
+          targetPort: 80
+          nodePort: 30011
+        selector:
+          app: nginx-deployment
+        type: NodePort
+      status:
+        loadBalancer: {}
+k apply -f service.yaml
