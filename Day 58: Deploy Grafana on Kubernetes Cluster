@@ -1,0 +1,44 @@
+k create deploy grafana-deployment-devops --image=grafana/grafana --dry-run=client -o yaml > deployment.yaml
+cat deployment.yaml
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: grafana
+        name: grafana-deployment-devops
+      spec:
+        replicas: 1
+        selector:
+          matchLabels:
+            app: grafana
+        strategy: {}
+        template:
+          metadata:
+            creationTimestamp: null
+            labels:
+              app: grafana
+          spec:
+            containers:
+            - image: grafana/grafana
+              name: grafana
+              resources: {}
+status: {}
+k apply -f deployment.yaml
+k get deploy
+# k expose deploy grafana-deployment-devops --port=3000 --type=Nodeport --dry-run=client -o yaml > service.yaml
+vi service.yaml
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: grafana-deployment-devops
+      spec:
+        type: NodePort
+        selector:
+          app: grafana
+        ports:
+          - port: 3000        # Port inside cluster
+            targetPort: 3000 # Port Grafana container is listening on
+            nodePort: 32000  # Port to access Grafana from outside
+k apply -f service.yaml
+k get svc -o wide
