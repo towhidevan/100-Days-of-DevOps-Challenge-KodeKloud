@@ -1,0 +1,20 @@
+k get deploy
+k get po
+k describe deploy redis-deployment
+k describe po redis-deployment-6fd9d5fcb-4xp6r
+k get cm
+k edit deploy redis-deployment
+    ........
+      containers:
+          - image: redis:alpine
+            imagePullPolicy: IfNotPresent
+            name: redis-container
+    .........
+      - configMap:
+          defaultMode: 420
+          name: redis-config
+        name: config
+    .........
+
+k get deploy
+k get po
