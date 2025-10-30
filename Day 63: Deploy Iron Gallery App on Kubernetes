@@ -1,93 +1,111 @@
-k get namespaces
-k get ns
-k create ns iron-namespace-xfusion
-# k create delpoyment iron-gallery-deployment-xfusion -n iron-namespace-xfusion --image=kodekloud/irongallery:2.0 -r 1 --dry-run=client -o yaml
-vi deploy-gallery.yaml
-      apiVersion: apps/v1
-      kind: Deployment
-      metadata:
-        name: iron-gallery-deployment-xfusion
-        namespace: iron-namespace-xfusion
-      spec:
-        replicas: 1
-        selector:
-          matchLabels:
-            run: iron-gallery
-        template:
-          metadata:
-            labels:
-              run: iron-gallery
-          spec:
-            containers:
-            - name: iron-gallery-container-xfusion
-              image: kodekloud/irongallery:2.0
-              resources:
-                limits:
-                  memory: 100Mi
-                  cpu: 50m
-              volumeMounts:
-              - name: config
-                mountPath: /usr/share/nginx/html/data
-              - name: images
-                mountPath: /usr/share/nginx/html/uploads
-            volumes:
-            - name: config
-              emptyDir: {}
-            - name: images
-              emptyDir: {}
-k apply -f deploy-gallery.yaml
-kubectl get all -n iron-namespace-xfusion
-vi db-deploy.yaml
-      apiVersion: apps/v1
-      kind: Deployment
-      metadata:
-        name: iron-db-deployment-xfusion
-        namespace: iron-namespace-xfusion
-        labels:
-          db: mariadb
-      spec:
-        replicas: 1
-        selector:
-          matchLabels:
-            db: mariadb
-        template:
-          metadata:
-            labels:
-              db: mariadb
-          spec:
-            containers:
-            - name: iron-db-container-xfusion
-              image: kodekloud/irondb:2.0
-              env:
-              - name: MYSQL_DATABASE
-                value: database_apache
-              - name: MYSQL_ROOT_PASSWORD
-                value: "complex_root_password" # Replace with a strong password
-              - name: MYSQL_PASSWORD
-                value: "complex_user_password" # Replace with a strong password
-              - name: MYSQL_USER
-                value: "iron_user" # Replace with a custom username
-              volumeMounts:
-              - name: db
-                mountPath: /var/lib/mysql
-            volumes:
-            - name: db
-              emptyDir: {}
-k apply -f db-deploy.yaml
-vi svc-gal.yaml
-      apiVersion: v1
-      kind: Service
-      metadata:
-        name: iron-gallery-service-xfusion
-        namespace: iron-namespace-xfusion
-      spec:
-        selector:
-          run: iron-gallery
-        ports:
-          - port: 80
-            protocol: TCP
-            targetPort: 3306i
-            nodePort: 32678
-        type: NodePort
-k apply -f svc-gal.yaml
-k get svc -n iron-namespace-xfusion
+vi iron-namespace-devops.yaml
+            apiVersion: v1
+            kind: Namespace
+            metadata:
+              name: iron-namespace-devops
+vi iron-gallery-deployment-devops.yaml
+            apiVersion: apps/v1
+            kind: Deployment
+            metadata:
+              name: iron-gallery-deployment-devops
+              namespace: iron-namespace-devops
+              labels:
+                run: iron-gallery
+            spec:
+              replicas: 1
+              selector:
+                matchLabels:
+                  run: iron-gallery
+              template:
+                metadata:
+                  labels:
+                    run: iron-gallery
+                spec:
+                  containers:
+                  - name: iron-gallery-container-devops
+                    image: kodekloud/irongallery:2.0
+                    resources:
+                      limits:
+                        memory: "100Mi"
+                        cpu: "50m"
+                    volumeMounts:
+                    - name: config
+                      mountPath: /usr/share/nginx/html/data
+                    - name: images
+                      mountPath: /usr/share/nginx/html/uploads
+                  volumes:
+                  - name: config
+                    emptyDir: {}
+                  - name: images
+                    emptyDir: {}
+vi iron-db-deployment-devops.yaml
+            apiVersion: apps/v1
+            kind: Deployment
+            metadata:
+              name: iron-db-deployment-devops
+              namespace: iron-namespace-devops
+              labels:
+                db: mariadb
+            spec:
+              replicas: 1
+              selector:
+                matchLabels:
+                  db: mariadb
+              template:
+                metadata:
+                  labels:
+                    db: mariadb
+                spec:
+                  containers:
+                  - name: iron-db-container-devops
+                    image: kodekloud/irondb:2.0
+                    env:
+                    - name: MYSQL_DATABASE
+                      value: database_web
+                    - name: MYSQL_ROOT_PASSWORD
+                      value: my-complex-root-password-123
+                    - name: MYSQL_USER
+                      value: custom_db_user
+                    - name: MYSQL_PASSWORD
+                      value: my-complex-user-password-456
+                    volumeMounts:
+                    - name: db
+                      mountPath: /var/lib/mysql
+                  volumes:
+                  - name: db
+                    emptyDir: {}
+vi iron-db-service-devops.yaml
+            apiVersion: v1
+            kind: Service
+            metadata:
+              name: iron-db-service-devops
+              namespace: iron-namespace-devops
+            spec:
+              selector:
+                db: mariadb
+              ports:
+                - protocol: TCP
+                  port: 3306
+                  targetPort: 3306
+              type: ClusterIP          
+vi iron-gallery-service-devops.yaml
+            apiVersion: v1
+            kind: Service
+            metadata:
+              name: iron-gallery-service-devops
+              namespace: iron-namespace-devops
+            spec:
+              selector:
+                run: iron-gallery
+              ports:
+                - protocol: TCP
+                  port: 80
+                  targetPort: 80
+                  nodePort: 32678
+              type: NodePort
+kubectl apply -f iron-namespace-devops.yaml
+kubectl apply -f iron-gallery-deployment-devops.yaml
+kubectl apply -f iron-db-deployment-devops.yaml
+kubectl apply -f iron-db-service-devops.yaml
+kubectl apply -f iron-gallery-service-devops.yaml
+k get svc -n iron-namespace-devops
