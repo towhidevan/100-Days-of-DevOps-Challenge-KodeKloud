@@ -1,0 +1,160 @@
+vi redis-master-deployment.yaml
+
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: redis-master
+        labels:
+          app: redis
+          role: master
+      spec:
+        replicas: 1
+        selector:
+          matchLabels:
+            app: redis
+            role: master
+        template:
+          metadata:
+            labels:
+              app: redis
+              role: master
+          spec:
+            containers:
+            - name: master-redis-devops
+              image: redis
+              resources:
+                requests:
+                  cpu: 100m
+                  memory: 100Mi
+              ports:
+              - containerPort: 6379
+
+vi redis-master-service.yaml
+
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: redis-master
+        labels:
+          app: redis
+          role: master
+      spec:
+        ports:
+        - port: 6379
+          targetPort: 6379
+        selector:
+          app: redis
+          role: master
+        type: ClusterIP
+
+vi redis-slave-deployment.yaml
+
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: redis-slave
+        labels:
+          app: redis
+          role: slave
+      spec:
+        replicas: 2
+        selector:
+          matchLabels:
+            app: redis
+            role: slave
+        template:
+          metadata:
+            labels:
+              app: redis
+              role: slave
+          spec:
+            containers:
+            - name: slave-redis-devops
+              image: gcr.io/google_samples/gb-redisslave:v3
+              resources:
+                requests:
+                  cpu: 100m
+                  memory: 100Mi
+              ports:
+              - containerPort: 6379
+              env:
+              - name: GET_HOSTS_FROM
+                value: dns
+
+vi redis-slave-service.yaml
+
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: redis-slave
+        labels:
+          app: redis
+          role: slave
+      spec:
+        ports:
+        - port: 6379
+          targetPort: 6379
+        selector:
+          app: redis
+          role: slave
+        type: ClusterIP
+
+vi frontend-deployment.yaml
+      
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: frontend
+        labels:
+          app: guestbook
+          tier: frontend
+      spec:
+        replicas: 3
+        selector:
+          matchLabels:
+            app: guestbook
+            tier: frontend
+        template:
+          metadata:
+            labels:
+              app: guestbook
+              tier: frontend
+          spec:
+            containers:
+            - name: php-redis-devops
+              image: gcr.io/google-samples/gb-frontend@sha256:a908df8486ff66f2c4daa0d3d8a2fa09846a1fc8efd65649c0109695c7c5cbff
+              resources:
+                requests:
+                  cpu: 100m
+                  memory: 100Mi
+              ports:
+              - containerPort: 80
+              env:
+              - name: GET_HOSTS_FROM
+                value: dns
+
+vi frontend-service.yaml
+
+      apiVersion: v1
+      kind: Service
+      metadata:
+        name: frontend
+        labels:
+          app: guestbook
+          tier: frontend
+      spec:
+        type: NodePort
+        ports:
+        - port: 80
+          targetPort: 80
+          nodePort: 30009 # Required external port
+        selector:
+          app: guestbook
+          tier: frontend
+
+kubectl apply -f redis-master-deployment.yaml
+kubectl apply -f redis-master-service.yaml
+kubectl apply -f redis-slave-deployment.yaml
+kubectl apply -f redis-slave-service.yaml
+kubectl apply -f frontend-deployment.yaml
+kubectl apply -f frontend-service.yaml
