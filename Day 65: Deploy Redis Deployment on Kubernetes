@@ -1,0 +1,60 @@
+k get cm
+vi redis-configmap.yaml
+    apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: my-redis-config
+    data:
+      # The Redis configuration file content
+      redis-config: |
+        maxmemory 2mb
+        # Other default configurations can be added here if needed
+vi redis-deployment.yaml
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: redis-deployment
+      labels:
+        app: redis
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app: redis
+      template:
+        metadata:
+          labels:
+            app: redis
+        spec:
+          containers:
+          - name: redis-container
+            image: redis:alpine
+            resources:
+              requests:
+                cpu: "1"
+            ports:
+            - containerPort: 6379 # Expose the default Redis port
+            volumeMounts:
+            # a. Empty directory volume mount for data
+            - name: data
+              mountPath: /redis-master-data
+            # b. ConfigMap volume mount for configuration
+            - name: redis-config
+              mountPath: /redis-master
+            command: ["redis-server"]
+            args: ["/redis-master/redis-config"] # Tell redis-server to use the mounted config file
+          volumes:
+          # a. Empty directory volume definition
+          - name: data
+            emptyDir: {}
+          # b. ConfigMap volume definition
+          - name: redis-config
+            configMap:
+              name: my-redis-config
+              items:
+              - key: redis-config # Key in the ConfigMap
+                path: redis-config # File name inside the container mount path
+kubectl apply -f redis-configmap.yaml
+kubectl apply -f redis-deployment.yaml
+kubectl get deployment redis-deployment
+kubectl get pods -l app=redis
