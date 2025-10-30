@@ -1,0 +1,138 @@
+vi mysql-secrets.yaml
+        apiVersion: v1
+        kind: Secret
+        metadata:
+          name: mysql-root-pass
+        type: Opaque
+        data:
+          # key: password, value: YUIidhb667 (base64 encoded)
+          password: WVVJaWRoYjY2Nw==
+        ---
+        apiVersion: v1
+        kind: Secret
+        metadata:
+          name: mysql-user-pass
+        type: Opaque
+        data:
+          # key: username, value: kodekloud_aim (base64 encoded)
+          username: a29kZWtsb3VkX2FpbQ==
+          # key: password, value: ksH85UJjhb (base64 encoded)
+          password: a3NIODVVSmpoYg==
+        ---
+        apiVersion: v1
+        kind: Secret
+        metadata:
+          name: mysql-db-url
+        type: Opaque
+        data:
+          # key: database, value: kodekloud_db9 (base64 encoded)
+          database: a29kZWtsb3VkX2RiOQ==
+
+vi mysql-storage.yaml
+        apiVersion: v1
+        kind: PersistentVolume
+        metadata:
+          name: mysql-pv
+          labels:
+            type: local
+        spec:
+          storageClassName: manual
+          capacity:
+            storage: 250Mi
+          accessModes:
+            - ReadWriteOnce
+          # Using hostPath for simplicity in a single-node or test environment.
+          hostPath:
+            path: "/mnt/mysql-data"
+        ---
+        apiVersion: v1
+        kind: PersistentVolumeClaim
+        metadata:
+          name: mysql-pv-claim
+        spec:
+          storageClassName: manual
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 250Mi
+
+vi mysql-deployment.yaml
+        apiVersion: apps/v1
+        kind: Deployment
+        metadata:
+          name: mysql-deployment
+          labels:
+            app: mysql
+        spec:
+          replicas: 1
+          selector:
+            matchLabels:
+              app: mysql
+          template:
+            metadata:
+              labels:
+                app: mysql
+            spec:
+              containers:
+              - name: mysql-container
+                image: mysql:5.7 # Using mysql:5.7 image
+                ports:
+                - containerPort: 3306
+                env:
+                # a) MYSQL_ROOT_PASSWORD from mysql-root-pass Secret
+                - name: MYSQL_ROOT_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: mysql-root-pass
+                      key: password
+                # b) MYSQL_DATABASE from mysql-db-url Secret
+                - name: MYSQL_DATABASE
+                  valueFrom:
+                    secretKeyRef:
+                      name: mysql-db-url
+                      key: database
+                # c) MYSQL_USER from mysql-user-pass Secret
+                - name: MYSQL_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: mysql-user-pass
+                      key: username
+                # d) MYSQL_PASSWORD from mysql-user-pass Secret
+                - name: MYSQL_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: mysql-user-pass
+                      key: password
+                volumeMounts:
+                - name: mysql-persistent-storage
+                  mountPath: /var/lib/mysql # Required mount path for MySQL data
+              volumes:
+              - name: mysql-persistent-storage
+                persistentVolumeClaim:
+                  claimName: mysql-pv-claim
+
+vi mysql-service.yaml
+          apiVersion: v1
+          kind: Service
+          metadata:
+            name: mysql
+            labels:
+              app: mysql
+          spec:
+            type: NodePort
+            ports:
+              - port: 3306
+                targetPort: 3306
+                nodePort: 30007 # Required external NodePort
+                protocol: TCP
+            selector:
+              app: mysql
+
+kubectl apply -f mysql-secrets.yaml
+
+kubectl apply -f mysql-storage.yaml
+
+kubectl apply -f mysql-deployment.yaml
+
+kubectl apply -f mysql-service.yaml
