@@ -1,0 +1,26 @@
+k get deployments.apps
+k get po
+k describe deploy python-deployment-devops
+k edit deploy python-deployment-devops
+❌
+    spec:
+          containers:
+          - image: poroko/flask-app-demo
+✅    
+    spec:
+          containers:
+          - image: poroko/flask-demo-app
+k get deploy
+k get svc
+k edit svc python-service-devops
+❌
+    nodePort: 32345
+        port: 8080
+        protocol: TCP
+        targetPort: 8080
+✅
+    nodePort: 32345
+        port: 5000
+        protocol: TCP
+        targetPort: 5000
+ k get svc
